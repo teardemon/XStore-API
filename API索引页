@@ -1,0 +1,45 @@
+# API索引页
+
+### <font color="red">APP相关的API</font>
+
+API内容|API名称|
+------|------|
+获取Host/Version|[appInfo]()|
+检查APP版本更新|[checkUpdate]()|
+
+### <font color="red">推荐页面API</font>
+
+API内容|API名称|
+------|------|
+获取推荐列表|[gameList]()|
+获取广告Banner|[ad]()|
+
+### <font color="red">排行页面API </font>
+
+API内容|API名称|
+------|------|
+获取排行列表|[gameList]()|
+
+
+### <font color="red">分类页面API</font>
+
+API内容|API名称|
+------|------|
+获取游戏分类列表|[gameGenresList]()|
+具体某种类型游戏列表|[gameList]()|
+
+
+### <font color="red">搜索页面API</font>
+
+API内容|API名称|
+------|------|
+搜索建议|[searchSuggest]()|
+获取搜索结果|[searchResultsList]()|
+
+
+### <font color="red">游戏详情API</font>
+
+API内容|API名称|
+------|------|
+游戏详情|[gameInfo]()|
+游戏下载|[gameDownload]()|
