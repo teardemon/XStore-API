@@ -1,0 +1,80 @@
+# API详情页
+
+## gameInfo
+
+### <font color="brown">功能</font>
+
+获取游戏详情
+
+### <font color="brown">URL示例</font>
+
+http://api_host/version/gameInfo?gameId=123919
+
+### <font color="brown">HTTP请求方式</font>
+
+**GET**
+
+### <font color="brown">请求参数</font>
+
+参数名称|是否必须|传递方式|作用|
+-------|------|-----|----|
+gameId|<font color="red">是</font>|query|全局唯一|
+
+### <font color="brown">返回结果</font>
+
+返回内容类型为application/json，示例如下：
+<pre class="wiki">
+{
+  "status":200,
+  "msg":"获取成功",
+  "data":{
+    "app":{
+       "changeLog": "————————小伙伴系统————————\r\n1.小伙伴让你宿命搭配更容易\r\n2.小伙伴让你队员选择更灵活\r\n\r\n————————魔神系统优化————————\r\n1.围剿魔神时去除了小兵,攻击更强力\r\n2.降低打魔神消耗,提升魔神奖励\r\n\r\n————————VIP光环系统————————\r\n1.新增VIP生命光环,给所有队员增加生命\r\n\r\n\r\n\r\nV1.1.4版本更新内容：\r\n————————全新第四装备【魂器】开启————————\r\n1.【魂器】附加一个强力队伍加成，让你的队伍加成不再单调\r\n2.【魂器】拥有超高的基础属性，攻击，生命，回复一次加个够\r\n3.【魂器】拥有强力的附加属性,星级越高附加属性越多越强力",
+      "introduction": "国内首款穿越神话题材连线类卡牌RPG手机游戏，与传统转珠三消类玩法不同，游戏中除了保留传统卡牌的吃卡强化、进化、卡牌宿命等卡牌手游的基本要素外，还融入了丰富的手动操作要素，结合效果丰富的四大类技能，养眼十足的女神系统，可玩性满点根本停不下来！更有超可爱日式动漫画风，数位插画师级别美术大大精心绘制的美丽女神，结合万千神明化身Q版萌物，正邪之战尽在玩家指掌之间，用你的手指来号令诸天神明吧！\r\n————————————————————————\r\n官方QQ群：305807440\r\n欢迎大家进群交流~~\r\n（加群有好礼哦~）",
+     "appSize": 95682483,
+		"displayName": "三国杀",
+		"icon": "HTTP0",
+		"id": 3296,
+		"categoryId": 15,
+		"categoryName": "棋牌桌游",
+		"packageName": "com.bf.sgs.hdexp",
+		"publisherName": "杭州边锋网络技术有限公司",
+		"screenshot": "HHTP1,HTTP2,HTTP3，HTTP4",
+		"updateTime": 1418364992235,
+		"versionCode": 67,
+		"ratingScore": 2.5,
+		"versionName": "2.7.7.2"
+	}
+}
+}
+</pre>
+
+
+### <font color="brown">返回字段说明</font>
+
+字段名称|作用|
+-------|----|
+changeLog|游戏更新记录|
+introduction|游戏介绍|
+appSize|游戏包大小，单位字节，方便计算百分比|
+displayName|列表主title显示内容|
+icon|合适大小的游戏icon地址|
+id|游戏id号|
+categoryID|游戏分类ID|
+categoryName|游戏分类名称，要与categoryID对应|
+packageName|游戏包签名/Bundle id|
+publisherName|开发商名称|
+screenshot|截图地址，以逗号分隔|
+updateTime|游戏包最后更新时间戳|
+versionCode|游戏包管理系统用以标示游戏资源版本|
+ratingScore|评价分数|
+versionName|开发商提供的供给用户看的版本号|
+
+
+
+### <font color="brown">其他</font>
+
+
+
+
+

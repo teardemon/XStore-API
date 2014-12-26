@@ -1,0 +1,79 @@
+# API详情页
+
+## ad
+
+### <font color="brown">功能</font>
+
+获取各个页面中的广告元素
+
+### <font color="brown">URL示例</font>
+
+http://api_host/version/ad?in=recommend
+
+### <font color="brown">HTTP请求方式</font>
+
+**GET**
+
+### <font color="brown">请求参数</font>
+
+参数名称|是否必须|传递方式|作用|
+-------|------|-----|----|
+in |<font color="red">是</font>|query|标明展示在那个页面<pre class="wiki">recommend:推荐页面</pre>|
+
+### <font color="brown">返回结果</font>
+
+返回内容类型为application/json，示例如下：
+<pre class="wiki">
+{
+  "status":200,
+  "msg":"获取成功",
+  "data":{
+    "apps":[{
+       "appSize": 95682483,
+		"displayName": "三国杀",
+		"image": "HTTP0",
+		"id": 3296,
+		"categoryId": 15,
+		"categoryName": "棋牌桌游",
+		"packageName": "com.bf.sgs.hdexp",
+		"publisherName": "杭州边锋网络技术有限公司",
+		"screenshot": "HHTP1,HTTP2,HTTP3，HTTP4",
+		"updateTime": 1418364992235,
+		"versionCode": 67,
+		"ratingScore": 2.5,
+		"versionName": "2.7.7.2"
+	},
+  …
+	],
+	"page":3
+    }
+}
+</pre>
+
+
+### <font color="brown">返回字段说明</font>
+
+字段名称|作用|
+-------|----|
+appSize|游戏包大小，单位字节，方便计算百分比|
+displayName|列表主title显示内容|
+image|合适大小的广告地址|
+id|游戏id号|
+categoryID|游戏分类ID|
+categoryName|游戏分类名称，要与categoryID对应|
+packageName|游戏包签名/Bundle id|
+publisherName|开发商名称|
+screenshot|截图地址，以逗号分隔|
+updateTime|游戏包最后更新时间戳|
+versionCode|游戏包管理系统用以标示游戏资源版本|
+ratingScore|评价分数|
+versionName|开发商提供的供给用户看的版本号|
+page|结果页面数目|
+
+
+### <font color="brown">其他</font>
+
+
+
+
+
