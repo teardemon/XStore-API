@@ -1,0 +1,40 @@
+# XCode Compiler&Debugger
+
+其实起这样的标题还是不太合适。。。
+
+XCode的老版本中还曾用着GCC，GDB的，高版本的在默认环境下是使用LLVM体系的。这之间的变化如下：
+
+项目|编译器前端|编译器后端
+----|--------|--------|
+GCC4.2|GCC|GCC|
+LLVM GCC|GCC|LLVM|
+LLVM Compile|Clang|LLVM|
+
+LLVM作为超越GCC体系的存在，其中的一员LLDB也是要赶超GDB的。
+
+LLDB特性如下：
+
+- 支持最新C/C++/Objective-C
+
+- 多行表达式支持局部变量和类型的定义
+
+- 采用JIT技术
+
+- 当JIT技术不能使用时，优化表达式的IR
+
+##LLDB使用
+
+首先推荐两篇强大的介绍文章 [LLDB调试命令初探](http://www.starfelix.com/blog/2014/03/17/lldbdiao-shi-ming-ling-chu-tan/)和[XCode LLDB Debug教程](http://my.oschina.net/notting/blog/115294),基本上介绍了常见的LLDB用法。
+
+不像GDB那种复杂的命令集，LLDB基本按照一种通用格式：
+
+<noun><verb> [-options [option-value]][argument [argument ...]]
+
+选项、命令、参数之间要用空格分隔，
+
+
+
+
+
+
+
