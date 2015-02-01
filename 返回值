@@ -1,0 +1,78 @@
+#-loadNibNamed:owner:options:的深入研究
+
+这个方法对iOS开发者来说都是非常熟悉的，但是在搞不清楚原理的情况下，这个方法经常会被错误的使用进而导致程序抛出异常进而崩溃，下面就细致地阐述一下这个方法的使用心得。
+
+##作用
+这个方法的作用是在指定包路径下解析nib文件中的内容。一共三个参数：第一个参数name：nib文件的name，并不需要包含.nib扩展名；第二个参数owner：指定了对象类型，与file‘s owner类型一致；第三个参数options：指定了当打开nib文件时额外的配置选项。
+
+## 返回值
+一个包含所有顶级元素的数组（这里的顶级元素指代的并非唯一，因为一个nib文件理论上可以存储N个嵌套的元素，这里的顶级便是只包含子元素/节点没有父亲元素的“树根节点”）
+
+当然了，这个数组中并不包含对File‘s owner的引用或者任何代理对象，它只包含那些在解档时实例化的对象。<strong>注意</strong>：你需要retain返回的数组或者任何它包含着的元素，因为nib文件对象在ARC下可能会被过早的释放掉
+
+你可以使用该方法去加载由IB生成并序列化后的界面对像，并使之在你的代码中被调用。在加载过程中，会解档每个元素并使之初始化，并按照nib文件中预先配置的属性值来配置，重建与任何其他对象的链接。为了建立outlet连接，这个方法会调用setValue：forKey：方法，这样很有可能导致对该对象retain。
+
+## 常见用法
+
+- 在代码中加载由xib定义的UIView
+
+- 在xib文件中使用由xib定义的UIView
+
+## 用法一：在代码中加载由xib定义的UIView
+假设自定义的的UIView子类为CustomView,三个文件分别为Custom.h,Custom.m,Custom.xib
+1、将Custom.xib的File‘s owner设为Custom
+2、在Custom中声明一个strong的property：view【防止loadNibName返回的对象过早释放】
+3、重写其initWithFrame 方法如下：
+
+```
+ -(id)initWithFrame:(CGRect)frame
+  {
+  
+    self = [super initWithFrame:frame];
+    
+    if (self) {
+            
+        // 1. Load the .xib file .xib file must match classname
+        NSString *className = NSStringFromClass([self class]);
+        self.View = [[[NSBundle mainBundle] loadNibNamed:className owner:self options:nil] firstObject];
+        
+        // 2. Set the bounds if not set by programmer (i.e. init called)
+        if(CGRectIsEmpty(frame)) {
+            self.bounds = _customView.bounds;
+        }
+        
+        // 3. Add as a subview
+        [self addSubview:self.View];
+        
+    }
+    return self;
+}
+
+```
+4、在你的代码中调用就好了init或者initWithFrame就好了
+
+## 用法二：在xib文件中使用由xib定义的UIView
+假设自定义的的UIView子类为CustomView,三个文件分别为Custom.h,Custom.m,Custom.xib
+1、将Custom.xib的File‘s owner设为Custom
+2、在Custom中声明一个strong的property：view【防止loadNibName返回的对象过早释放】
+3、重写其initWithCoder 方法如下：
+
+```
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if(self) {
+        
+        // 1. Load .xib file
+        NSString *className = NSStringFromClass([self class]);
+        self.View = [[[NSBundle mainBundle] loadNibNamed:className owner:self options:nil] firstObject];
+
+        // 2. Add as a subview
+        [self addSubview:self.View];
+        
+    }
+    return self;
+}
+
+```
+
+4、在另外的xib文件中添加UIView并将其class设为Custom

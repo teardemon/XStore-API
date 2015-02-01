@@ -1,0 +1,58 @@
+# Gradle --Next-Generation Builds 入门
+
+本文主要参考Tim Berglund和 Matthew McCullough编著的《Building and Testing with Gradle》以及Tim Berglund编著的《Gradle Beyond the Basics》
+
+## Hello Gradle！
+与Ant、 Maven等传统的Java构建工具不同，Gradle把自己定位成为一个智能的中间层，既提供了在构建时所必需遵守的必要性规则，也提供了非常方便的扩展和重新定义构建规则的方法。它不仅提供了构建时所需的一系列标准规则，还是一个使用可描述性语言来扩展构建规则的开发工具集。
+
+Gradle与此同时还提供了依赖管理的工具，并且支持Maven和Ivy的依赖管理规则，这样方便用户迁移以前的构建工程。
+
+一个比较关键并且复杂的工程构建文件需要一个极具表达力的格式（语言），10年前，XML对构建工具来说是个优秀的语言，然而这10年的开发经验证明，XML文件往往过于巨大，只适合机器阅读而非人类阅读。而且XML复杂的树形嵌套结构限制其表达能力，无法很好描述一个程序流或者数据入口，严格地讲，XML并不适合做构建文件的形式语言。而Gradle的构建文件使用Groovy语言，这是属于JVM的一种动态语言，在很多地方与Java相似，但又有很多不同。每一个Gradle 构建文件就是一个可执行的Groovy脚本。与Ant和Maven不同的一点是，Gradle的基于Grovvy语言的构建文件允许用户可以自行在构建文件中编写特定目的的任务（Task）。
+
+但是，Gradle并不会让用户直接面对Groovy，而是使用了一种“域描述”（domain-specific language，DSL）语言来进行编码的任务。这种DSL用适当的方式来描述构建程序的Task，并不是真正的去编写程序，编写程序只是一种次优手段。Gradle优先推荐用户使用DSL其次才是使用代码来完成Task。
+
+当标准DSL无法描述你所要做的构建动作时，你可以通过插件来扩展DSL。
+
+安装配置神马的太简单了，注意配好Path就好了
+
+```
+sudo unzip -q gradle-2.2-bin.zip -d /usr/local/
+echo "export GRADLE_HOME=/usr/local/gradle-2.2" >> .profile
+echo "export PATH=$PATH:$GRADLE_HOME/bin" >> .profile
+
+```
+
+## 第一个.gradle
+
+创建一个文件，起名为build.gradle ,内容如下：
+
+```
+task helloworld <<{
+  println ‘hello，world’
+}
+```
+在终端中执行以下命令，可以看到以下输出
+
+```
+$gradle - q helloworld 
+hello,world
+```
+
+再来一个复杂一点使用了依赖的。
+
+```
+task hello <<{
+  print 'hello,'
+}
+
+task world(dependsOn:hello)<<{
+println 'world'
+}
+
+```
+执行命令并且结果如下
+
+```
+$gradle -q world
+hello,world
+```

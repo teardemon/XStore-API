@@ -1,0 +1,5 @@
+# valueForKeyPath:的几种快速有效的使用技巧
+
+我们在iOS开发中经常会遇到对数组进行运算的问题，数组中的对象操作一般借助Array的方法来进行，当数组对象是字典时，我们会有一些特殊的运算需求，当然了，借助NSExpression可以实现这些需求，但杀鸡焉用宰牛刀，其实KVC中非常基本的valueForKeyPath也可以实现部分类似的功能，下面只举一些不常见的例子。
+
+【我自己感觉跟JS中的map函数的功能很像，但JS的map显然不如valueForKeyPath】

@@ -1,0 +1,5 @@
+#Core Animation 基础
+CoreAnimation是一个提供将View和APP中其他可视部分动画化的通用性框架。它并不是取代APP中的Views，相反是更好地融合于View中以提高其表现力。
+
+## Layer 图层
+绝大多数的Layer并不会直接画在APP中，相反，Layer承载着你的APP提供的内容
