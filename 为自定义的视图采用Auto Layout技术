@@ -1,0 +1,23 @@
+# 为自定义的视图采用Auto Layout技术
+
+当你设计完成一个自定义视图并决定使用AutoLayout技术时，你必须要提供充足的信息供Layout System使用，以便计算出符合要求的约束条件。有的时候，你需要在自定义视图中实现-intrinsicContentSize此方法来返回一个合适的值，这在Auto Layout某些情况下非常有用。
+
+先来看一下-intrinsicContentSize方法的定义
+
+## -instrinsicContentSize
+
+返回该视图的自然大小，基本上只通过该View自有的属性计算得出。
+
+通常Layout System并不关心自定义视图所要显示的内容，重写此方法可以与LayoutSystem沟通它想使用多大的Size来展示其内容，这个尺寸必须独立于其content的frame来计算出来，因为并没有方法可以动态地根据其frame的变化来通知展示内容大小的变化
+
+如果给定的View没有instrinsicContentSize,那么将返回UIViewNoIntriStrinsicMetric
+
+自定义视图中任何影响内容展示大小的属性发生变动后，必须手动调用invalidateIntrinsicContentSize来告诉Layout System其内容改变了
+
+## 实例
+
+1、按照我之前发表的关于加载一个自定义视图的xib到另外一个xib的方法，先实现自定义视图的相关方法
+
+2、在其实现文件.m文件中，重写intrinsicContentSize方法，**注意** 只能根据其属性来计算Size，千万不要去依赖别的外界属性；除此之外，也尽量不要用frame来计算，因为在布局系统中，依赖的东西准确说是Alignment Rectangle而不是frame，这两个的大小对某些视图元素来说并不一致。
+
+3、在封装的修改自定义视图展示内容的方法中不要忘记手动调用invalidateIntrinsicConetentSize方法来通知Layout System其内容发生变化需要重新布局了（这里友情提示一下：没必要调用setNeedLayout或者setLayout，因为invalidateintrinsicconetentsize的方法已经通知了Layout System在下一轮刷新中会更新布局的）
