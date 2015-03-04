@@ -1,0 +1,19 @@
+# Cornerstone 获取完整的Log记录的解决办法
+
+Cornerstone是mac os x上面一款强大的SVN管理工具，功能比较全，第一次使用其Log功能，出现了“Cornerstone couldn't contact repository to read the lastest log entries”的错误。如果没有完整的log记录，回滚代码都不方便了。解决此问题的办法如下：
+
+- 关闭Cornerstone
+
+- 在终端中执行以下指令
+
+ ```
+ defaults delete com.zennaware.Connerstone HistoryCacheUsage
+ 
+ ```
+- 前往Users/XXXX/Library/Cache/Cornerstone 目录下，清空此文件夹下面所有文件
+
+-  重新启动Cornerstone，点击任意Working Copy的Log
+
+- 在弹出的对话框中选择“Never ...” 
+
+这个问题出现的原因主要在于Cornerstone为了保护Working Copy的Log完整性，在本地也同步了一份Log，如果在开始时选择Download而不是Never，如果SVN服务器响应慢，那么极有可能导致Log目录下载不完整，从而导致再次进入时会出现上述问题。 

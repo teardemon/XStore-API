@@ -1,0 +1,18 @@
+# Android 开发的三个版本
+
+这三个版本分别是minSDKVersion、targetSDKVersion、compileSDKVersion
+
+## minSDKVersion
+
+这个是是应用跟系统交互的，以该值为标准，操作系统会拒绝将应用安装在minSDKVersion高于其本身的设备上
+
+
+## targetSDKVersion
+
+目标版本是指应用设计给哪个班程序，在大多数请胯下，只需要将目标设备SDK版本号设为最新版。
+查看网址：http://developer.android.com/refernce/android/os/Build.VERSION_CODES.HTML上的文档可以查看版本间差异，那样就可以决定是修改应用以适应新版本，还是降低目标版本。在高于目标版本的设备上运行，会忽略新版本的变化
+
+
+## compileSDKVersion
+
+编译版本只是我们与编译器的约定，编译时，会导入相应版本的API进行编译。 那样就有可能存在minSDKVersion版本上没有compileSDK版本的API的不兼容情况，这一点就需要借助Android Lint工具来进行兼容性检查。

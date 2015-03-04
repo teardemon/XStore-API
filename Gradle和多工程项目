@@ -1,0 +1,59 @@
+# Gradle和多工程项目
+
+现在一个项目通常不只有一个工程来组成，通常会包含多个工程来组成。
+
+### **多工程构建的结构**
+
+一般来说多工程的构建会按照整个项目的工程自然布局来build，一般会有一个主工程和一个子工程，特殊情况下，子工程也是嵌套的。无论怎样，主工程会占据这个项目目录的顶级目录。Gradle处理的默认规则是在每个工程下面包括子工程中建立build文件，你可以根据不同工程的需求在不同的配置文件中进行设置，也可以将所有的build代码放入到主工程中的build文件中。
+
+为了告诉Gradle主工程那些目录下面还包含子工程，你需要设置文件setting.gradle。这个文件与setting.gradle文件不同，相互独立，最简单的setting.gradle只包含有工程的子目录名。
+
+当整个构建过程处在初始化阶段时，Gradle会优先寻找setting.gradle,来查找子工程。如果这些子工程下面有build.gradle文件，那么他们将会处理成为用以描述build过程的DAG，用以形成有效的build过程。
+
+除了上面的配置多个工程的build 文件外，也可以才采取将多个工程的build文件合并为一个build文件。下面举个栗子：
+
+```
+evaluationDependsOn(':codec')
+
+allprojects{
+  apply plugin:'java'
+}
+
+project(':codec'){
+  repositories{
+    mavenCentral()
+  }
+  
+  dependencies{
+    compile  'commons-codec:commons-codec:1.5'
+  }
+}
+
+dependencies{
+  compile project(':codec')
+  compile project(':content')
+}
+
+[ 'shakespeare', 'williams', 'shelley', 'chesterton' ].each { poet -> task "${poet}"(type: JavaExec) {group = 'Encoded Poetry'args = [ poet ]main = 'org.gradle.example.codedpoet.CommandLine' classpath sourceSets.main.runtimeClasspath,￼￼￼} }project(':codec').sourceSets.main.runtimeClasspath
+
+```
+在上面的栗子中有几点需要特别注意：
+
+- EvaluationDependsOn 告诉Gradle要优先处理:codec工程的构建选项，这样能保证在codec这个构建对象在其他build文件评估前已经存在。
+
+- allprojects 方法向所有工程传递了配置参数
+
+- project()方法提供了我们直接访问codec子工程配置的方法，使用词语发，我们可以在主工程build文件中轻松配置所有工程
+
+当然了，除了上述两种配置多工程项目构建的方法外，还有一种“混合式”的，顾名思义，这是种将两种build方式混合在一起的方法，在主工程的build文件中添加所有工程都需要配置的参数，在各自子工程的build文件中添加只针对此工程的的build代码。
+
+### 到底选择独立式、一体式还是混合式？
+
+那么我们多工程项目到底是使用独立式、一体式还是混合式构建方式呢。这三种都有各自的好处，Gradle的用户可以根据工程项目的特点自行选择。
+
+### DAG 
+
+DAG，有向无环图。Gradle为何能高效的组织整个构建过程，实际上依赖了图论中的DAG。
+
+Gradle中的内部结构使得它能以一种高效简洁的方式处理多工程的构建，Gradle的体系结构使得所有依赖项和相关项按照一定次序排列在一个统一的DAG中，这给予了用户来表述多工程构建过程极大的灵活性。
+ 

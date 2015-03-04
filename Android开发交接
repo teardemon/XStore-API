@@ -1,0 +1,22 @@
+# Android开发交接
+
+
+## SVN地址
+
+1. 曲奇SDK SVN地址：http://svn.dev.ledu.com:81/repos/joyport/maodou/GameSdk曲奇SDK Demo SVN 地址：http://svn.dev.ledu.com:81/repos/joyport/maodou/GameSdkDemo曲奇SDK对接文档地址：http://svn.dev.ledu.com:81/repos/joyport/maodou/OtherFiles
+
+2. JPAF框架代码：http://svn.dev.ledu.com:81/repos/joyport/projects/JoyPortAndroidFrameworkJPAF框架Demo：http://svn.dev.ledu.com:81/repos/joyport/projects/JoyPortAndroidFrameworkDemoJPAF框架使用说明及规范：http://svn.dev.ledu.com:81/repos/joyport/projects/JoyPortAndroidFramework/目录下的JPAF使用说明及规范.docx
+
+3. 悦TV项目http://svn.dev.ledu.com:81/repos/joyport/yuewan/GameSdk/trunk
+
+4. 悦玩sdk及demohttp://svn.dev.ledu.com:81/repos/joyport/yuewan/StoreSdk
+
+5. 爱游svn地址：http://115.238.43.146:9527/svn/repos_sys/projects/aiyou/android/trunk 爱游需要引用框架
+
+6. 游乐项目: **请先拨VPN再连接SVN** VPN：113.106.27.232 账号：yangfuqiang 密码：ule2014#1314 SVN：https://192.168.158.21:8443/svn/uleAPP 账号：yangfuqiang 密码：Uleapp123#
+
+7. 乐都SDK：http://svn.dev.ledu.com:81/repos/joyport/projects/androidGameSDK/branches/0.4.0
+
+
+
+## 开发框架            	

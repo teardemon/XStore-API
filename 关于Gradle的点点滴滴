@@ -1,0 +1,29 @@
+# 关于Gradle的点点滴滴
+
+1. gradle -q taskname 这条命令行中的-q参数执行的效果是什么？ 
+在此命令行中，q执行的效果是使得log输出记录仅包含task的输出，显得整洁些，否则会包含其他很多输出。
+
+2. 经典的task使用案例
+	
+	```
+    4.times {
+  counter-> 
+    task "task$counter"  <<{
+       println "I'm task number $counter"
+    }
+}
+task0.dependOn task2,task3
+我们执行gradle -q task0 可以看到输出如下
+I‘m task number 2
+I’m task number 3
+I‘m task number 0
+	```
+3.  Gradle处理规则:会在src/main/java 目录下寻找源代码，并且会将src/main/resources目录下的所有文件包含至JAR文件，输出文件目录为build，JAR文件会输出到build/libs文件夹下。
+
+4. 在一堆驼峰式的task名字中，你可以其中单词的首字母缩写来完成build命令的执行。例如像task名“compileTest”，你可以执行 gradle compTest 或者 gradle cT
+
+5. Sourceset是由Java Plugin来定义的概念，一个source set理应是一些一起编译的或执行的源码文件，Java plugin定义了两种“标准”source set，一种是“main”，另外一种是“test”。这个main 类型的source set包含你的产品源代码，将来会被编译并组合成一个JAR文件；而test类型的source set包含你的test源码，这个将会被编译并使用JUnit或者TestNG来执行
+
+6. settings file将会在build 的初始化阶段执行，里面主要包括了多工程下面的一些关于命名的约定。
+
+ 

@@ -1,0 +1,211 @@
+# Gradle Task
+
+### **Task Action**
+
+- 在Groovy语言中，<<左移符号可根据被操作的对象类型重载成具有不同功能的函数。在本例子中，Gradle将<<重载成通过代码块为Task增加Action列表的功能，这个等同于我们之后见到的doLast()函数。
+
+- 在Gradle编程环境中，task作为最顶级的编程对象并不是一次性定义完成的，它可以在之后被修改配置。
+
+### **Task配置**
+
+- 配置Task的关键是代码块的构建
+
+```
+task initializeDatebase
+initializeDatabase << { println 'connet to database' }
+initializeDatabase << { println 'update database schema' }
+initializeDatabase { println 'configuring database connection' }
+
+```
+输出结果如下 $ gradle -b scratch.gradle initializeDatabase
+
+```
+configuring database connection 
+:initializeDatabase
+connect to database
+update database schema
+
+```
+
+-  Groovy使用闭包的形式引用两个花括号之间的代码块，一个闭包函数就如同一个对象可以被当做参数传递或者赋值给某个变量，稍后执行它。你会在Gradle中看到诸多的闭包，因为他们能很好地满足Gradle配置代码或者build Action的要求。
+
+- 像上面的例子中，在没有左移符号的情况下 ，第三句并没有添加额外的Task  Action ，而是一个配置块，它会在所有task action之前执行，这个时期称为 configuration lifecycle phase（configuration生命周期阶段），task action执行的阶段称为excution phase （执行阶段）
+
+- Gradle毎执行一个build都会经历三个阶段：
+  - 初始化阶段 这个阶段，Gradle决定那个工程参与到构建过程中
+  - 配置阶段 各种task对象通常被配置成一种基本对象模型-DAG（有向无环图）
+  - 执行阶段 执行阶段就会按照task对象的依赖关系按顺序依次执行
+ 
+- 配置块像动作块一样可以增加。配置块是用来设置那些接下来用在task action中。这种配置结构会提供了将task转变为富对象模型的机会，这种对象包含关于build足够多的信息而不是简简单单提供一些按序列执行的的动作。所有的build配置代码都会在Gradle build时运行无论哪种task执行。
+
+- task在Gradle中是对象，当正式执行前，Gradle会生成一个内部的模型来表述你的构建过程。所有的Task都有个基类-DefaultTask，像Java语言中的Object类型，所有的Task都继承至此类，这个DefaultTask并不会做任何事情，但是它包含了Gradle工程模型所需要的任何基础性的接口。
+
+### **DeafultTask的方法**
+
+- dependsOn(task) 为调用此方法的task添加所依赖的task
+
+```
+dependsOn的常见用法
+1、 task loadTestData{
+  dependsOn createSchema
+}
+2、 task loadTestData{
+  dependsOn << createSchema
+}
+3、 task loadTestData{
+  dependsOn 'createSchema'
+}
+4、 task loadTestData
+loadTestData.dependsOn createSchema
+5、task loadTestData(dependsOn:createSchema)
+```
+此方法还可以增加多个依赖的task，使用方法符合现代脚本语言标准。
+
+- doFirst(closure)  此方法可以添加可执行代码先于此task的所有的action。在执行阶段，这个代码块会在所有相关Task之前执行。此方法提供了添加现有task的action的效果，即使这部分action是定义在其他build文件中或者添加的那些你无法控制的插件。每次调用这个函数都会将新加入的代码块放在task执行序列的前端。
+
+```
+常见使用方法
+1、 task setupDatabaseTests <<{
+   println 'load test data'
+}
+ setupDatabaseTests.doFirst {
+   println 'create schema'
+}
+2、 在配置块中直接调用，再次强调一下：配置块中的代码会早于Task的Action先执行。
+task setupDatabaseTests << {
+  println 'load test data'
+}
+
+setupDatabaseTests {
+  doFirst {
+    println 'create schema'
+  }
+}
+
+```
+
+- doLast（closure）类似于doFirst方法，但是效果恰好相反，在task 执行的action之后再执行。
+
+- onlyIf（closure）这个提供了用户使用断言来决定task是否执行。断言的值由闭包函数来返回【在Groovy语言中，闭包中如果没有return表达式，那么最后一句表达式的值作为此闭包的值】onlyIf的值可以来自于读取文件、可以调用WebService，检查安全认证或者其他你要添加的条件
+
+```
+onlyIf使用方法
+task createSchema << {
+  println 'create database schema'  
+}
+task loadTestData(dependsOn:createSchema)<<{
+  println 'load test Data'
+}
+
+loadTestData.onlyIf{
+  System.properties['load.data']=='true'
+}
+
+```
+
+### **DefaultTask的属性**
+
+- didWork属性 boolean 指明task是否执行完成。
+
+- enabled属性 boolean 指明task是否被允许接下来执行。
+
+- path属性 string 一个简单地单一task的path是以冒号开头并附加上task的名字，例如":task " 最先开始的冒号表明这个task位于最顶级的build file中，由于存在嵌套的build文件，那样嵌套的task的path可以以这样的形式出现":subProject:task"
+
+- logger属性 对应Gradle中的logger 对象，logger对象实现了org.slf4j.Logger接口
+ 
+ - DEBUG 这是一个较高的输出信息级别，因为会将时间戳、log级别、信息输出者的名字都会得到输出，所有其他的log级别只会输出log信息。
+ 
+ - INFO 低级别的记录输出，在build阶段中会输出感兴趣的信息。
+ 
+ - LIFECYCLE 低级别的记录输出，通常来源于Grradle本身，大部分关于build生命周期中的变化以及build工具中的执行输出。当Gradle执行时没有带上-q的命令行参数，那么这就是默认的记录输出级别。
+ 
+ - WARN 低级别的记录输出但是又非常重要，它会输出所有在build过程中的关键问题的警告提示，当log Level被设置成为WARN，那么QUIET级别的信息不会被放出。
+ 
+ - QUIET 当Log Level被设置为QUIET，那么WARN级别的信息不会被放出，当Gradle运行参数带上-q时，QUIET被设置为默认的级别，并且System.out.println会输出到日志记录中
+ 
+ - ERROR 少但及其重要的日志输出记录 用来发现构建时产生的错误。如果将log level设置为ERROR，那么所有的System.out.println将不会输出到控制台中
+ 
+- logging属性提供了我们访问log等级。logging.level是个可读可写的属性，，可以在build过程中修改此属性的值
+
+- description属性 description属性是用来供人阅读的可描述该task的目的，当然了也有很多方法可以设置此属性。
+
+```
+task helloworld(description:'says hello to the world') <<{
+  println 'helloworld'
+}
+helloworld {
+  description ='says hello to the world'
+}
+
+helloworld.description='say hello to the world'
+
+```
+- temporayDir 这个属性返回了指向该build文件所拥有的临时目录的File对象。这个目录存储task在build过程中产生的任何临时的文件。
+
+### **动态属性**
+
+我们也可以设置task的很多其他的属性。在其配置块中设置。
+
+### **Task类型**
+
+- Copy 一个Copy类型的Task会拷贝一些文件从一个位置到另一个位置，并且可以设定拷贝的文件限制
+
+```
+task copyFiles(type:Copy){
+  from 'resources'
+  into 'target'
+  include '**/*.xml','**/*.txt','**/*.properties'
+}
+
+这个Copy任务如果目标文件夹不存在那么将会创建，在本例中，将会拷贝任何文件格式为.xml，.properties,.txt为扩展名的文件。
+```
+- Jar 一个Jar类型的Task会从源文件创建Jar文件，它会打包源文件并且其放在build/libs的目录下
+
+```
+apply plugin：'java'
+task customJar(type:Jar){
+  manifest{
+    attributes firstKey:'firstValue',secondKey:'secondValue'
+  }
+  archivename ='hello.jar'
+  destinationDir= file("${buildDir}/jars")
+  from sourceSets.main.classes
+}
+```
+
+- JavaExec 这个Task会运行一个带有main()方法的class文件。
+
+```
+apply plugin :'java'
+
+repositories{
+  mavenCentral()
+}
+
+dependencies {
+  runtime 'commons -codec:commons-codec:1.5'
+}
+
+task encode(type:JavaExec,dependsOn:classes){
+  main='org.gradle.example.commandline.MetaphoneEncoder'
+  args=' the Reain in Spain falls mainly in the plain'.spilt().toList()
+  classpath sourceSets.main.classesDir
+  classpath configurations.runtime
+} 
+
+classpath属性设置为configuration.runtime是设置程序在运行时所依赖的项。
+```
+
+### **自定义Task类型**
+
+有两种方式可以实现自定义Task。
+
+第一种
+  
+  设置自定义Task在build文件中。
+   
+-----
+
+第二种
+   
+  task设置在buildSrc目录中，使用Groovy语言编辑Task代码存放于buildSrc目录下，其中buildSrc目录与build.gradle文件并行。
