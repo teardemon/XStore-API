@@ -1,0 +1,40 @@
+# applicationID和packageName的区别
+
+所有的Android App都需要具有一个packageName的东西，packageName在设备上唯一确定一个app，同样在Google Play store上也是唯一的。这也就意味着一旦发布app，这个packageName就无法修改，否则会导致已安装app的用户看不到新版本的升级。
+
+在使用gradle以前，我们通常采用在manifest文件中定义packageName，如以下形式：
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.my.app"
+    android:versionCode="1"
+    android:versionName="1.0" >    
+```
+除了刚才所述的鉴定唯一性的作用外，我们还在代码中使用其作为相关Service/Activity的前缀注册，当然了还有R文件的使用。
+
+在有了gradle之后，我们可以轻松地打包不同版本的app，例如free和pro版本。它们两个版本在GooglePlay上应该是属于两个不同的版本，并且应该是单独安装销售的，所以它们在同一台机器上可以同时安装。与此同时，你也想要保持R文件和源代码文件不用改变（因为它们的前缀来源于packageName），放到以前，这样的需求是很难实现的。但是有了gradle以后这个就可以实现了，借助新的概念applicationId
+
+- 最后打包出来的.apk中的maifest中配置的package，用来在设备或者Google Play上鉴定应用唯一性的，我们称之为applicationId
+
+- 在代码中使用的package用来做R文件、相关activity/service的注册，我们继续称之为packageName
+
+你可以在build.gradle文件中为不同的variant定义applicationId，如下方代码一样
+
+```
+ productFlavors {
+        pro {
+            applicationId = "com.example.my.pkg.pro"
+        }
+        free {
+            applicationId = "com.example.my.pkg.free"
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
+    }
+    ....
+```
