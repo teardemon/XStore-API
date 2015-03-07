@@ -1,3 +1,32 @@
-# ProGuard
+# ProGuard & Zipalign
 
-Proguard 是一个Java .class文件压缩、优化、混淆和预检测器，
+### Proguard
+
+Proguard 是一个Java .class文件压缩、优化、混淆和预检测器,它可以帮你混淆代码并移除没有使用的代码端，不仅如此还会重命名类名、字段名、变量名为一些语意不明的名称。这样做的结果会使.apk文件变小并更加不容易被逆向工程。Proguard是内置于Android构建系统中，所以并不需要自己手动去触发调用。当然了这些操作是可选的。
+
+在你创建Android工程后，一个proguard.cfg文件会自动生成在工程根目录下方。为了开启Proguard，你需要在工程目录下的project.properties文件，设置proguard.config属性，如果proguard.cfg文件在工程主目录下，你可以按照如下格式设置：
+
+```
+proguard.config=proguard.cfg
+```
+在release模式下进行构建动作时，如果此属性被设置了，那么在应用的字节码打包成apk文件之前proguard会自动处理。当然了如果是debug模式下是不会执行的。
+
+还有一些比较特殊的情况，如下面所示，proguard并不能很好地处理代码，有可能会出现误操作的行为
+
+- 只在AndroidManifest.xml文件中引用的class文件
+
+- 使用JNI的方法
+
+- 动态引用的字段和方法
+
+你可以在proguard.cfg中配置例外情况，按照以下格式配置
+
+```
+-keep public class <myclass>
+```
+这样便使myclass免去混淆的命运了，更多的参数选项可以看 [Proguard Manual](http://stuff.mit.edu/afs/sipb/project/android/sdk/android-sdk-linux/tools/proguard/docs/index.html#manual/introduction.html)
+
+### zipalign
+
+zipalign则是一个对apk文件优化的工具，准确说是归档对齐工具。它可以使得apk文件中未经压缩的图像、二进制文件按照4字节的边界对齐。这种对齐方式可以有效降低运行时数据占有的内存（处于避免内存碎片化的角度）。
+这个工具也是在eclipse export包中会被自动调用，当然了这一切都会在你配完签名之后进行。为什么不能在配签名之前执行呢？因为假如你颠倒了zipalign和签名的顺序，那么签名的过程又会重新破坏原来的对齐。不光签名，任何对已经对齐的文件作出的修改都会破坏原来文件的对齐形式。
