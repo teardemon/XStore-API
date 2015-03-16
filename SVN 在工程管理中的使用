@@ -1,0 +1,24 @@
+# SVN 在工程管理中的使用
+
+### SVN的四种状态
+
+- 未修改且是当前的
+
+文件在工作目录里没有修改，在工作版本之后没有修改提交到版本库。svn commit 操作不做任何事情，svn update 不做任何事情。
+
+- 本地已修改且是当前的
+
+在工作目录已经修改，从基本修订版本之后没有修改提交到版本库。本地修改没有提交，因此 svn commit 会成功提交，svn update 不做任何事情。
+
+- 本地未修改，已过时
+
+这个文件在工作目录没有修改，但在版本库中已经修改了。这个文件最终将更新到最新版本，成为当时的公共修订版本。svn commit 不做任何事情，svn update 将会取得最新的版本到工作副本。
+
+- 本地已修改，已过时
+
+这个文件在工作目录和版本库都得到修改。一个 svn commit 将会失败，这个文件必须首先更新，svn update 命令会合并公共和本地修改，如果 Subversion 不可以自动完成，将会让用户解决冲突。
+
+### 低廉的“复制”
+
+Subversion's repository has a special design. When you copy a directory, you don't need to worry about the repository growing huge—Subversion doesn't actually duplicate any data. Instead, it creates a new directory entry that points to an existing tree. If you're an experienced Unix user, you'll recognize this as the same concept behind a hard link. As further changes are made to files and directories beneath the copied directory, Subversion continues to employ this hard link concept where it can. It duplicates data only when it is necessary to disambiguate different versions of objects.
+
