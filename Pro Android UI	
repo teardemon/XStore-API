@@ -1,0 +1,7 @@
+# Pro Android UI	
+
+- The ViewGroup has two nested classes that encapsulate and handle two very important layout functions: layout parameters and margins. There is one Java interface in the ViewGroup class called an OnHierarchyChangeListener that “listens” for hierarchy changes within the ViewGroup, and allows developers to implement their own Java program logic for when this occurs.
+
+- ViewGroup.LayoutParams:Nested Class ControlsLayout
+
+- 
