@@ -1,0 +1,32 @@
+# Android 推送数据说明
+
+在原有推送数据以外，加入payload字段，基本格式如下；
+
+```
+····
+"payload":{
+    	"action": "gift",
+    	"data": {
+       	 "gift_id": "id"
+   	    }
+}
+····
+```
+
+## 礼包推送数据字典
+```
+···
+"payload":{
+    	"action": "gift",
+    	"data": {
+       	 "gift_id": "id"
+   	    }
+}
+···
+```
+
+字段|作用|
+---|----|
+action|指明此推送类型为礼包推送，字段为gift|
+data|推送数据|
+gift_id|推送的礼包id|
